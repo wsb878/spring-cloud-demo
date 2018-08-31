@@ -1,0 +1,27 @@
+server:
+  port: 8761
+spring:
+  application:
+    ## 服务名称（eureka 服务ID 大写）
+    name: spring-cloud-eureka
+
+eureka:
+  instance:
+    # 将Instance ID设置成IP:端口的形式
+    instance-id: ${spring.cloud.client.ipAddress}
+  client:
+    healthcheck:
+      enabled: true
+    registerWithEureka: false
+    fetchRegistry: false
+    service-url:
+      defaultZone: http://localhost:${server.port}/eureka
+
+management:
+  security:
+    ## 关闭安全验证
+    enabled: false
+
+logging:
+  file: /data/log/${spring.application.name}.log
+  level: info

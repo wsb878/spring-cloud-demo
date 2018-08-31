@@ -1,0 +1,67 @@
+## 服务注册与发现中心
+eureka:
+  instance:
+    #eureka是使用hostname进行注册的，使用IP进行注册
+    prefer-ip-address: true
+    # 将Instance ID设置成IP
+    instance-id: ${spring.cloud.client.ipAddress}
+    # 续约到期时间（默认90秒）
+    lease-expiration-duration-in-seconds: 30
+    # 续约更新时间间隔（默认30秒）
+    lease-renewal-interval-in-seconds: 5
+  client:
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: http://eureka1:8761/eureka/,http://eureka2:8761/eureka/,http://eureka3:8761/eureka/
+
+server:
+  ## 服务暴露端口
+  port: 8888
+
+spring:
+  application:
+    ## 服务名称（serviceId）
+    name: spring-cloud-config
+  cloud:
+    config:
+      server:
+        git:
+          ## git 仓库地址,{application}为项目名称,每个项目的配置单独存放
+          uri: git@gitlab.baofoo.net:spring-cloud-config/{application}.git
+          ## git 仓库用户名
+          username: muzhi@baofoo.com
+          ## git 仓库密码
+          password: password123,
+      ## git 分支
+      label: master
+    stream:
+      kafka:
+        binder:
+          ## kafka breokers (主题,分组spring-cloud 会自动创建)
+          brokers: kafka1,kafka2
+          defaultBrokerPort: 9092
+          zkNodes: zk1,zk2,zk3,zk4,zk5
+          defaultZkPort: 2181
+
+info:
+  name: spring-cloud-config
+  desc: Spring cloud 分布式配置中心（基于Git）
+  git:
+    uri: ${spring.cloud.config.server.git.uri}
+    label: ${spring.cloud.config.label}
+  log:
+    level: ${logging.level}
+    file: ${logging.file}
+  kafka:
+    brokers: ${spring.cloud.stream.kafka.binder.brokers}
+  zk:
+    nodes: ${spring.cloud.stream.kafka.binder.zkNodes}
+management:
+  security:
+    ## 关闭安全验证
+    enabled: false
+  port: 9000
+logging:
+  file: /data/log/${spring.application.name}.log
+  level: info

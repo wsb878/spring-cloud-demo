@@ -1,0 +1,65 @@
+## 服务注册与发现中心
+eureka:
+  instance:
+    #eureka是使用hostname进行注册的，使用IP进行注册
+    prefer-ip-address: true
+    # 将Instance ID设置成IP
+    instance-id: ${spring.cloud.client.ipAddress}
+    # 续约到期时间（默认90秒）
+    #lease-expiration-duration-in-seconds: 90
+    # 续约更新时间间隔（默认30秒）
+    #lease-renewal-interval-in-seconds: 30
+  client:
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: http://eureka1:8761/eureka/,http://eureka2:8761/eureka/,http://eureka3:8761/eureka/
+server:
+  port: 9411
+spring:
+  application:
+    name: spring-cloud-sleuth
+  #sleuth:
+    #enabled: false
+  cloud:
+    stream:
+      kafka:
+        binder:
+          ## kafka breokers (主题,分组spring-cloud 会自动创建)
+          brokers: kafka1,kafka2
+          defaultBrokerPort: 9092
+          zkNodes: zk1,zk2,zk3,zk4,zk5
+          defaultZkPort: 2181
+#zipkin:
+#  storage:
+#    type: elasticsearch
+#    StorageComponent: elasticsearch
+#    elasticsearch:
+#      hosts: 10.0.21.73:9200,10.0.21.74:9200,10.0.21.75:9200
+#      cluster: elasticsearch
+#      index: zipkin
+#      index-shards: 5
+#      index-replicas: 1
+#  sleuth:
+#    enabled: false
+#  datasource:
+#    #schema[0]: classpath:/zipkin.sql
+#    url: jdbc:mysql://mysql:3306/spring-cloud-zipkin?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
+#    username: root
+#    password: root
+#    driver-class-name: com.mysql.jdbc.Driver
+#    initialize: true
+#    continue-on-error: true
+#
+#zipkin:
+#  storage:
+#    type: mysql
+
+management:
+  security:
+    ## 关闭安全验证
+    enabled: false
+
+logging:
+  file: /data/log/${spring.application.name}.log
+  level: info

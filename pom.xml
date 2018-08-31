@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.system.springcloud</groupId>
+    <artifactId>spring-cloud-demo</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>Spring cloud Demo</name>
+
+    <properties>
+        <version.springcloud>Edgware.RELEASE</version.springcloud>
+        <version.springboot>1.5.9.RELEASE</version.springboot>
+        <version.mysql-connector>6.0.6</version.mysql-connector>
+        <version.lombok>1.16.6</version.lombok>
+        <version.java>1.8</version.java>
+    </properties>
+
+    <modules>
+        <module>spring-cloud-eureka</module>
+        <module>spring-cloud-provider</module>
+        <module>spring-cloud-consumer</module>
+        <module>spring-cloud-config</module>
+        <module>spring-cloud-zuul</module>
+        <module>spring-cloud-sleuth</module>
+        <module>spring-cloud-hystrix-turbine</module>
+    </modules>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.9.RELEASE</version>
+    </parent>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Edgware.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!--  lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${version.lombok}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+
+   <repositories>
+       <repository>
+           <id>repository.springframework.maven.milestone</id>
+           <name>Spring Framework Maven Milestone Repository</name>
+           <url>http://repo.spring.io/milestone/</url>
+       </repository>
+   </repositories>
+
+</project>

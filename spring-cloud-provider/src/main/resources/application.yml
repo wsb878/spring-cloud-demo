@@ -1,0 +1,86 @@
+## 服务注册与发现中心
+eureka:
+  instance:
+    #eureka是使用hostname进行注册的，使用IP进行注册
+    prefer-ip-address: true
+    # 续约到期时间（默认90秒）
+    lease-expiration-duration-in-seconds: 60
+    # 续约更新时间间隔（默认30秒）
+    lease-renewal-interval-in-seconds: 15
+    # 将Instance ID设置成IP
+    instance-id: ${spring.cloud.client.ipAddress}
+    metadata-map:
+      # 服务集群
+      cluster: TEST
+  client:
+    healthcheck:
+      # 健康检查（默认为关闭,需手动开启）
+      enabled: true
+    serviceUrl:
+      # eureka 集群（统一配置host来使用,配置文件统一化,可移植化）)
+      defaultZone: http://eureka1:8761/eureka/,http://eureka2:8761/eureka/,http://eureka3:8761/eureka/
+server:
+  ## 服务暴露端口
+  port: 8765
+spring:
+  application:
+    ## 服务名称（eureka 服务ID 大写）
+    name: spring-cloud-provider
+  cloud:
+    ## 配置中心
+    config:
+      discovery:
+        ## 启用服务发现
+        enabled: true
+        ## 配置中心服务ID（通过eureka 发现配置中心）
+        service-id: spring-cloud-config
+    stream:
+      kafka:
+        binder:
+          ## kafka breokers (主题,分组spring-cloud 会自动创建,（统一配置host来使用,配置文件统一化,可移植化）)
+          brokers: kafka1,kafka2
+          # kafka 端口
+          defaultBrokerPort: 9092
+          # kafak 负载插件zk节点（统一配置host来使用,配置文件统一化,可移植化）
+          zkNodes: zk1,zk2,zk3,zk4,zk5
+          # zookeeper 端口
+          defaultZkPort: 2181
+  sleuth:
+    sampler:
+      # 链路（日志）追踪,权重（1.0为100%）
+      percentage: 1.0
+
+  redis:
+    # Redis数据库索引（默认为0）
+    database: 0
+    sentinel:
+     # Redis master名称
+      master: cache
+      # Redis 节点（统一配置host来使用,配置文件统一化,可移植化）
+      nodes: redis1:26379,redis2:26379,redis3:26379
+    pool:
+      # 连接池最大连接数（使用负值表示没有限制）
+      max-active: 8
+      # 连接池中的最大空闲连接
+      max-idle: 8
+      # 连接池中的最小空闲连接
+      min-idle: 1
+      # 连接池最大阻塞等待时间（使用负值表示没有限制）
+      max-wait: 10000
+    # 连接超时时间（毫秒）
+    timeout: 10000
+    #password:
+feign:
+  hystrix:
+    ## 开启断路器（默认为关闭）
+    enabled: true
+
+management:
+  security:
+    ## 关闭安全验证
+    enabled: false
+logging:
+  # 日志目录
+  file: /data/log/${spring.application.name}.log
+  # 日志级别
+  level: info

@@ -1,0 +1,40 @@
+server:
+  port: 8761
+spring:
+  profiles:
+    active: eureka1
+  application:
+    ## 服务名称（eureka 服务ID 大写）
+    name: spring-cloud-eureka
+
+eureka:
+  instance:
+    #eureka是使用hostname进行注册的，使用IP进行注册
+    #prefer-ip-address: true
+    # 将Instance ID设置成IP
+    instance-id: ${spring.cloud.client.ipAddress}
+    # 续约到期时间（默认90秒）
+    lease-expiration-duration-in-seconds: 30
+    # 续约更新时间间隔（默认30秒）
+    lease-renewal-interval-in-seconds: 10
+  server:
+    # 设为false，关闭自我保护
+    enable-self-preservation: false
+    # 清理无效节点间隔（单位毫秒，默认是60*1000）
+    eviction-interval-timer-in-ms: 10000
+  client:
+    healthcheck:
+      enabled: true
+    registerWithEureka: true
+    fetchRegistry: true
+    service-url:
+      defaultZone: http://eureka2:${server.port}/eureka/,http://eureka3:${server.port}/eureka/
+
+management:
+  security:
+    ## 关闭安全验证
+    enabled: false
+
+logging:
+  file: /data/log/${spring.application.name}.log
+  level: info

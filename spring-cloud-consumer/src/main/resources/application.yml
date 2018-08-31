@@ -1,0 +1,63 @@
+## 服务注册与发现中心
+eureka:
+  instance:
+    #eureka是使用hostname进行注册的，使用IP进行注册
+    prefer-ip-address: true
+    # 续约到期时间（默认90秒）
+    lease-expiration-duration-in-seconds: 60
+    # 续约更新时间间隔（默认30秒）
+    lease-renewal-interval-in-seconds: 15
+    # 将Instance ID设置成IP
+    instance-id: ${spring.cloud.client.ipAddress}
+    metadata-map:
+      # 服务集群
+      cluster: TEST
+  client:
+    healthcheck:
+      # 健康检查（默认为关闭,需手动开启）
+      enabled: true
+    serviceUrl:
+      # eureka 集群（统一配置host来使用,配置文件统一化,可移植化）)
+      defaultZone: http://eureka1:8761/eureka/,http://eureka2:8761/eureka/,http://eureka3:8761/eureka/
+server:
+  ## 服务暴露端口
+  port: 8766
+spring:
+  application:
+    ## 服务名称（eureka 服务ID 大写）
+    name: spring-cloud-consumer
+  cloud:
+    ## 配置中心
+    config:
+      discovery:
+        ## 启用服务发现
+        enabled: true
+        ## 配置中心服务ID（通过eureka 发现配置中心）
+        service-id: spring-cloud-config
+    stream:
+      kafka:
+        binder:
+          ## kafka breokers (主题,分组spring-cloud 会自动创建)
+          brokers: kafka1,kafka2
+          defaultBrokerPort: 9092
+          zkNodes: zk1,zk2,zk3,zk4,zk5
+          defaultZkPort: 2181
+    loadbalancer:
+      retry:
+        # 负载均衡重试机制开关
+        enabled: true
+  sleuth:
+    sampler:
+      percentage: 1.0
+feign:
+  hystrix:
+    ## 开启断路器（默认为关闭）
+    enabled: true
+
+management:
+  security:
+    ## 关闭安全验证
+    enabled: false
+logging:
+  file: /data/log/${spring.application.name}.log
+  level: info
